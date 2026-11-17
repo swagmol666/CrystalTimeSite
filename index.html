@@ -1,1 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrystalTime | Minecraft Сервер</title>
+    <meta name="description" content="CrystalTime — русский Minecraft сервер. Присоединяйтесь к нашей comunitету и играйте с друзьями!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0c10;
+            --panel: #15171f;
+            --accent: #5cff9a;
+            --accent-glow: rgba(92, 255, 154, 0.25);
+            --text: #e8eaed;
+            --text-dim: #a3a8b0;
+            --border: #2a2d36;
+            --danger: #ff4d4d;
+            --mc-green: #2e7d32;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        img { max-width: 100%; display: block; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* Header / Nav */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(11, 12, 16, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo-icon {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(79, 172, 254, 0.4);
+            display: grid; place-items: center;
+            font-weight: 800; font-size: 1.1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--accent); }
+
+        .btn-ip {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-ip:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Hero */
+        .hero {
+            padding: 70px 20px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute; top: -10%; left: 50%;
+            width: 600px; height: 400px;
+            background: radial-gradient(circle, var(--accent-glow), transparent 60%);
+            transform: translateX(-50%);
+            z-index: -1;
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(46, 125, 50, 0.15);
+            border: 1px solid rgba(46, 125, 50, 0.4);
+            color: var(--accent);
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+        h1 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--text);
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .hero-sub {
+            color: var(--text-dim);
+            font-size: 1.15rem;
+            max-width: 620px;
+            margin: 0 auto 30px;
+            font-weight: 400;
+        }
+
+        .ip-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .ip-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-family: 'Inter', monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 220px;
+        }
+
+        .copy-btn {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: grid; place-items: center;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: var(--accent); color: var(--bg); }
+
+        .player-stats {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 14px 22px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value { display: block; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        .stat-label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        .btn-primary { background: var(--accent); color: var(--bg); box-shadow: 0 0 20px var(--accent-glow); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-discord { background: #5865f2; color: #fff; }
+        .btn-store { background: #ff4d4d; color: #fff; }
+
+        /* Sections */
+        section { padding: 60px 20px; }
+
+        .section-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .card h3 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.35rem;
+            margin-bottom: 14px;
+            color: var(--text);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .about-text p { color: var(--text-dim); margin-bottom: 14px; font-size: 0.98rem; }
+
+        .meta-list { list-style: none; }
+        .meta-list li {
+            display: flex; align-items: center; gap: 10px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .meta-list b { color: var(--text); margin-right: 4px; }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            text-align: center;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+        .feature-icon {
+            width: 48px; height: 48px;
+            border-radius: 10px;
+            background: var(--accent-glow);
+            color: var(--accent);
+            font-size: 1.6rem;
+            display: grid; place-items: center;
+            margin: 0 auto 14px;
+            border: 1px solid rgba(92, 255, 154, 0.3);
+        }
+
+        .feature h4 { margin-bottom: 8px; color: var(--text); font-size: 1.1rem; }
+        .feature p { color: var(--text-dim); font-size: 0.9rem; }
+
+        /* Rules */
+        .rules-cols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .rule-list { list-style: none; color: var(--text-dim); font-size: 0.95rem; }
+        .rule-list li { margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .rule-list li::before {
+            content: "•"; color: var(--accent); font-size: 1.2rem;
+            position: absolute; left: 0; top: -2px;
+        }
+        .rule-list li span { color: var(--text); font-weight: 600; }
+
+        /* Join */
+        .join-wrap {
+            background: linear-gradient(135deg, rgba(92,255,154,0.10), rgba(79,172,254,0.05));
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            max-width: 170px;
+            text-align: center;
+        }
+
+        .step-num {
+            width: 32px; height: 32px;
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: 50%;
+            font-weight: 800;
+            display: grid; place-items: center;
+            margin: 0 auto 10px;
+            font-size: 1rem;
+        }
+
+        .step h4 { margin-bottom: 6px; color: var(--text); font-size: 1.05rem; }
+        .step p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 20px 20px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .socials { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; }
+        .socials a {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            display: grid; place-items: center;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .socials a:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        .mojang { margin-top: 14px; font-size: 0.8rem; color: #6b7280; }
+
+        .notice {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--panel); border: 1px solid var(--border);
+            color: var(--text); padding: 10px 18px; border-radius: 10px;
+            font-size: 0.9rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            opacity: 0; transition: all 0.3s; z-index: 100;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .hero { padding: 50px 16px 30px; }
+            .ip-row { flex-direction: column; align-items: stretch; }
+            .ip-box { min-width: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="container">
+        <a href="#" class="logo">
+            <div class="logo-icon">CT</div>
+            CrystalTime
+        </a>
+        <ul class="nav-links">
+            <li><a href="#about">О сервере</a></li>
+            <li><a href="#features">Особенности</a></li>
+            <li><a href="#rules">Правила</a></li>
+            <li><a href="#join">Как зайти</a></li>
+        </ul>
+        <button class="btn-ip" id="ipBtn" title="Скопировать IP">
+            <span>crystal-time.ru</span>
+        </button>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <div class="status-pill">
+            <div class="status-dot"></div>
+            Онлайн • <span id="players">0</span>/100 игроков
+        </div>
+        <h1>CrystalTime</h1>
+        <p class="hero-sub">Русский Minecraft сервер с дружным сообществом, уникальными режимами и стабильной работой круглосуточно.</p>
+
+        <div class="ip-row">
+            <div class="ip-box" id="ipDisplay">play.crystal-time.ru</div>
+            <button class="copy-btn" id="copyBtn" title="Скопировать IP">📋</button>
+        </div>
+
+        <div class="player-stats">
+            <div class="stat">
+                <span class="stat-value">1.20.x</span>
+                <span class="stat-label">Версия</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">Survival</span>
+                <span class="stat-label">Основной режим</span>
+            </div>
+            <div class="stat">
+                <span class="stat-value">RU</span>
+                <span class="stat-label">Регион</span>
+            </div>
+        </div>
+
+        <div class="hero-actions">
+            <a href="#join" class="btn btn-primary">Войти на сервер</a>
+            <a href="#" class="btn btn-discord">Discord</a>
+            <a href="#" class="btn btn-store">Магазин</a>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="container">
+    <div class="section-title">О сервере</div>
+    <div class="about-grid">
+        <div class="card about-text">
+            <p>CrystalTime — это комфортный русский Minecraft-сервер для тех, кто ценит хорошее сообщество и стабильный игровой опыт. Мы создаём уютную атмосферу, где можно спокойно строить, исследовать мир и играть с друзьями без лагов и очередей.</p>
+            <p>На сервере регулярно проводятся ивенты, обновления и конкурсы от администрации. Присоединяйтесь — ваше место уже готово!</p>
+        </div>
+        <div class="card">
+            <h3>📋 Информация</h3>
+            <ul class="meta-list">
+                <li><b>IP:</b> play.crystal-time.ru</li>
+                <li><b>Версия:</b> 1.20.x (поддержка новых версий)</li>
+                <li><b>Режимы:</b> Survival, Creative, Mini-игры</li>
+                <li><b>Язык:</b> Русский</li>
+                <li><b>Хостинг:</b> Россия, низкий пинг</li>
+                <li><b>Работа:</b> 24/7</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="container">
+    <div class="section-title">Особенности</div>
+    <div class="features-grid">
+        <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <h4>Нет лагов</h4>
+            <p>Шумное оборудование и оптимизация позволяют играть комфортно даже на слабых ПК.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🛡️</div>
+            <h4>Защита от грифа</h4>
+            <p>Ваши постройки в безопасности thanks к современной системе защиты территорий.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🎁</div>
+            <h4>Ежедневные бонусы</h4>
+            <p>Заходите каждый день и получайте награды, ресурсы и редкие предметы.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">👥</div>
+            <h4>Сообщество</h4>
+            <p>Дружелюбные игроки и активная администрация в нашем Discord-сервере.</p>
+        </div>
+    </div>
+</section>
+
+<section id="rules" class="container">
+    <div class="section-title">Правила сервера</div>
+    <div class="rules-cols">
+        <div class="card">
+            <h3>🚫 Запрещено</h3>
+            <ul class="rule-list">
+                <li><span>Читы и моды</span> на преимущество (xray, fly, kill-aura и т.д.)</li>
+                <li><span>Гриф и краш</span> чужих построек и сервера</li>
+                <li><span>Оскорбления</span> игроков и администрации</li>
+                <li><span>Реклама</span> других серверов и сторонних ресурсов</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>⚠️ Важно</h3>
+            <ul class="rule-list">
+                <li><span>Чит-клиенты</span> приводят к блокировке аккаунта</li>
+                <li><span>Флуд и капс</span> в чате не приветствуются</li>
+                <li><span>Обман и мошенничество</span> при сделках между игроками</li>
+                <li><span>Решение споров</span> только через администрацию</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="join" class="container">
+    <div class="section-title">Как зайти на сервер</div>
+    <div class="join-wrap">
+        <p style="color: var(--text-dim); margin-bottom: 30px;">Запустите Minecraft версии 1.20.x и подключитесь к адресу ниже.</p>
+        <div class="ip-row" style="justify-content: center; margin-bottom: 0;">
+            <div class="ip-box" id="ipDisplay2" style="min-width: auto;">play.crystal-time.ru</div>
+            <button class="copy-btn" id="copyBtn2" style="width:40px;height:40px;">📋</button>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h4>Запустите Minecraft</h4>
+                <p>Выберите версию 1.20.x в лаунчере и нажмите "Играть".</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h4>Многопользовательская игра</h4>
+                <p>В главном меню выберите пункт "Мультиплеер".</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h4>Добавьте сервер</h4>
+                <p>Нажмите "Добавить сервер" и вставьте IP: <b>play.crystal-time.ru</b></p>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <h4>Присоединяйтесь</h4>
+                <p>Выберите сервер в списке и нажмите "Подключиться".</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="container">
+    <div class="socials">
+        <a href="#" title="Discord">💬</a>
+        <a href="#" title="VK">📘</a>
+        <a href="#" title="Telegram">✈️</a>
+        <a href="#" title="YouTube">▶️</a>
+    </div>
+    <div>&copy; 2026 CrystalTime Minecraft Server. Все права защищены.</div>
+    <div class="mojang">Minecraft © Mojang Studios. Сервер не является официальным продуктом Mojang.</div>
+</footer>
+
+<div id="toast">IP скопировано в буфер обмена</div>
+
+<script>
+const ipText = "play.crystal-time.ru";
+const playersEl = document.getElementById("players");
+let players = 42;
+
+function simulatePlayers() {
+    players += Math.floor(Math.random() * 5) - 2;
+    if (players < 0) players = 0;
+    if (players > 100) players = 100;
+    playersEl.textContent = players;
+}
+setInterval(simulatePlayers, 4000);
+simulatePlayers();
+
+function copyIP(btn) {
+    navigator.clipboard.writeText(ipText).then(() => {
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2000);
+    });
+}
+
+document.getElementById("copyBtn").addEventListener("click", () => copyIP(document.getElementById("copyBtn")));
+document.getElementById("copyBtn2").addEventListener("click", () => copyIP(document.getElementById("copyBtn2")));
+
+document.getElementById("ipBtn").addEventListener("click", () => copyIP(document.getElementById("ipBtn")));
+</script>
+
+</body>
+</html>
 
